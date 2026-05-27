@@ -1,0 +1,25 @@
+yaml
+# 给这个工作流起个名字
+name: 欢迎新朋友
+
+# 当有人新建Issue时，触发这个工作流
+on:
+  issues:
+    types: [opened]
+
+# 定义具体要执行的任务
+jobs:
+  welcome-new-issue:
+    runs-on: ubuntu-latest
+    steps:
+      # 使用官方 action 来回复
+      - name: 回复新Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '👋 你好 @' + context.payload.issue.user.login + '！\n\n感谢你的反馈，我们会尽快处理。'
+            })
